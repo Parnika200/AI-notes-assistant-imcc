@@ -1,4 +1,3 @@
-{% load socialaccount %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -24,26 +23,12 @@
     </form>
 
     <p>
-        <a href="{% url 'account_reset_password' %}">
-            Forgot your password?
-        </a>
+        <a href="{% url 'account_reset_password' %}">Forgot your password?</a>
     </p>
-
-    <hr>
-
-    <form method="post" action="{% provider_login_url 'google' %}">
-        {% csrf_token %}
-        <button type="submit">Continue with Google</button>
-    </form>
-
-    <form method="post" action="{% provider_login_url 'github' %}">
-        {% csrf_token %}
-        <button type="submit">Continue with GitHub</button>
-    </form>
 
     <p>
         Don’t have an account?
-        <a href="{% url 'account_signup' %}">Sign up</a>
+        <a href="{% url 'account_signup' %}">Create one</a>
     </p>
 </body>
 </html>

@@ -16,3 +16,6 @@ Logs in with email
 Redirected to /dashboard/
         ↓
 Logs out → redirected to /
+
+
+
