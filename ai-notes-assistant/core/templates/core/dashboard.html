@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Your dashboard | AI Notes Assistant</title>
+</head>
+<body>
+    <h1>Your dashboard</h1>
+    <p>Welcome, {{ user.email|default:user.username }}.</p>
+    <p>Your account is signed in.</p>
+
+    <form action="{% url 'account_logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Log out</button>
+    </form>
+</body>
+</html>

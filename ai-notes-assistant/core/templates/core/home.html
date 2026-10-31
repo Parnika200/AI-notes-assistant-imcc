@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>AI Notes Assistant</title>
+</head>
+<body>
+    <h1>AI Notes Assistant</h1>
+    <p>Upload study materials, create summaries, and revise with quizzes.</p>
+
+    {% if user.is_authenticated %}
+        <p>Signed in as {{ user.email|default:user.username }}.</p>
+        <p><a href="{% url 'dashboard' %}">Open dashboard</a></p>
+
+        <form action="{% url 'account_logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Log out</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'account_login' %}">Log in</a></p>
+        <p><a href="{% url 'account_signup' %}">Create an account</a></p>
+    {% endif %}
+</body>
+</html>

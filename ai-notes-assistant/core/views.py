@@ -1,10 +1,11 @@
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
 
 def home(request):
-    return HttpResponse(
-        """
-        <h1>AI Notes Assistant</h1>
-        <p>Your project is running with Django and SQLite.</p>
-        """
-    )
+    return render(request, "core/home.html")
+
+
+@login_required
+def dashboard(request):
+    return render(request, "core/dashboard.html")
