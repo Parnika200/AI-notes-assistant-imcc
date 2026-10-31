@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Create account | AI Notes Assistant</title>
+</head>
+<body>
+    <h1>Create your account</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create account</button>
+    </form>
+
+    <p>
+        Already have an account?
+        <a href="{% url 'account_login' %}">Log in</a>
+    </p>
+</body>
+</html>
