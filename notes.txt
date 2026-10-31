@@ -18,4 +18,5 @@ Redirected to /dashboard/
 Logs out → redirected to /
 
 
-
+Start the server: python manage.py runserver 0.0.0.0:8000
+Open http://127.0.0.1:8000 on your laptop, and use only this address.

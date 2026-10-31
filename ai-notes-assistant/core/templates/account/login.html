@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Log in | AI Notes Assistant</title>
+    <title>Log in | MindNest AI</title>
 </head>
 <body>
     <h1>Log in</h1>
@@ -30,5 +30,12 @@
         Don’t have an account?
         <a href="{% url 'account_signup' %}">Create one</a>
     </p>
+
+    {% load socialaccount %}
+
+<form method="post" action="{% provider_login_url 'google' %}">
+    {% csrf_token %}
+    <button type="submit">Continue with Google</button>
+</form>
 </body>
 </html>

@@ -17,12 +17,9 @@ SECRET_KEY = 'django-insecure-8yjmki*y!c=7z^$8d=0sod&n()e2&5bh0yktj=s2q)o^3o5d^0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    "10.206.146.19",
-]
+ALLOWED_HOSTS = ["*"] if DEBUG else ["127.0.0.1", "localhost"]
 
+ACCOUNT_ADAPTER = "core.adapters.CustomAccountAdapter"
 # Application definition
 
 INSTALLED_APPS = [
@@ -143,6 +140,7 @@ ACCOUNT_SIGNUP_FIELDS = [
 
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
 
 LOGIN_REDIRECT_URL = "/dashboard/" # go to dashboard when logged in
 LOGOUT_REDIRECT_URL = "/" # when logout
