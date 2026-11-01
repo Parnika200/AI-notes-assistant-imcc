@@ -3,37 +3,22 @@ from django.db import models
 
 
 class StudyMaterial(models.Model):
-    class Status(models.TextChoices):
-        UPLOADED = "uploaded", "Uploaded"
-        PROCESSED = "processed", "Processed"
-        FAILED = "failed", "Failed"
-
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="study_materials",
     )
     title = models.CharField(max_length=255)
-    # The PDF file is stored under media/study_materials/pdfs/.
-    # SQLite stores its relative path.
     file_path = models.FileField(
-        upload_to="study_materials/pdfs/",
-        max_length=500,
+        upload_to="study_materials/",
+        validators=[FileExtensionValidator(["pdf"])],
     )
     file_type = models.CharField(max_length=20, default="PDF")
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(
-        max_length=20,
-        choices=Status.choices,
-        default=Status.UPLOADED,
-    )
-
-    class Meta:
-        ordering = ["-uploaded_at"]
+    status = models.CharField(max_length=20, default="uploaded")
 
     def __str__(self):
         return self.title
-
 
 class Summary(models.Model):
     material = models.ForeignKey(

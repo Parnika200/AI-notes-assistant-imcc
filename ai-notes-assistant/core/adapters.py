@@ -2,7 +2,7 @@ import os
 import socket
 
 from allauth.account.adapter import DefaultAccountAdapter
-
+#uase phones IP
 
 def get_lan_ip():
     """Find this laptop's current IP on the hotspot/Wi-Fi."""

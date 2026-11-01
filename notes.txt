@@ -1,21 +1,3 @@
-THIRD_PARTY LIBRARIES
-
-1) ALLAUTH -
-
-used for authentication.
-provides login with google/git
-forgot password with email link
-
-flow
-User signs up (email + username + password)
-        ↓
-No verification needed
-        ↓
-Logs in with email
-        ↓
-Redirected to /dashboard/
-        ↓
-Logs out → redirected to /
 
 
 Start the server: python manage.py runserver 0.0.0.0:8000
