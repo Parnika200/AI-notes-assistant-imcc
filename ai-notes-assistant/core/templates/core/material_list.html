@@ -1,15 +1,30 @@
 <h1>My Study Materials</h1>
 
-<p><a href="{% url 'material_upload' %}">Upload a PDF</a></p>
+<p><a href="{% url 'material_upload' %}">Upload study material</a></p>
 
 {% if materials %}
     <ul>
         {% for material in materials %}
             <li>
-                {{ material.title }}
+                <strong>{{ material.title }}</strong>
+                ({{ material.file_type }})
                 — {{ material.uploaded_at|date:"d M Y, H:i" }}
 
-                <a href="{% url 'material_open' material.id %}">Open PDF</a>
+                <br>
+                Status:
+                {% if material.status == "processed" %}
+                    Ready
+                {% elif material.status == "failed" %}
+                    Failed
+                    {% if material.error_message %}
+                        — {{ material.error_message }}
+                    {% endif %}
+                {% else %}
+                    Processing...
+                {% endif %}
+
+                <br>
+                <a href="{% url 'material_open' material.id %}">Open</a>
 
                 <form
                     method="post"
@@ -19,6 +34,13 @@
                     {% csrf_token %}
                     <button type="submit">Delete</button>
                 </form>
+
+                {% if material.extracted_text %}
+                    <details>
+                        <summary>Preview extracted text</summary>
+                        <pre>{{ material.extracted_text|truncatechars:1500 }}</pre>
+                    </details>
+                {% endif %}
             </li>
         {% endfor %}
     </ul>

@@ -5,7 +5,17 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from .forms import StudyMaterialForm
 from .models import StudyMaterial
+import logging
+from django.contrib import messages
 
+from .forms import StudyMaterialForm
+from .models import StudyMaterial
+from .text_extraction import (
+    NoTextExtractedError,
+    extract_text_from_material,
+)
+
+logger = logging.getLogger(__name__)
 # Content type for each supported file extension
 CONTENT_TYPES = {
     "pdf": "application/pdf",
@@ -34,7 +44,6 @@ def material_list(request):
         {"materials": materials},
     )
 
-
 @login_required
 def material_upload(request):
     if request.method == "POST":
@@ -43,10 +52,38 @@ def material_upload(request):
         if form.is_valid():
             material = form.save(commit=False)
             material.user = request.user
-            material.file_type = material.file_path.name.rsplit(".", 1)[-1].upper()
-            material.status = "uploaded"
+            material.file_type = (
+                material.file_path.name.rsplit(".", 1)[-1].upper()
+            )
+            material.status = "pending"
             material.save()
+
+            try:
+                material.extracted_text = extract_text_from_material(material)
+                material.status = "processed"
+                material.save(update_fields=["extracted_text", "status"])
+
+                messages.success(request, "File uploaded and text extracted.")
+
+            except NoTextExtractedError as error:
+                material.status = "failed"
+                material.save(update_fields=["status"])
+                messages.warning(request, str(error))
+
+            except Exception:
+                logger.exception(
+                    "Text extraction failed for study material ID %s",
+                    material.id,
+                )
+                material.status = "failed"
+                material.save(update_fields=["status"])
+                messages.error(
+                    request,
+                    "The file was uploaded, but its text could not be extracted.",
+                )
+
             return redirect("material_list")
+
     else:
         form = StudyMaterialForm()
 
@@ -55,7 +92,6 @@ def material_upload(request):
         "core/material_upload.html",
         {"form": form},
     )
-
 
 @login_required
 def material_open(request, material_id):
