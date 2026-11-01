@@ -6,6 +6,14 @@ from django.views.decorators.http import require_POST
 from .forms import StudyMaterialForm
 from .models import StudyMaterial
 
+# Content type for each supported file extension
+CONTENT_TYPES = {
+    "pdf": "application/pdf",
+    "txt": "text/plain; charset=utf-8",
+    "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+}
+
+
 def home(request):
     return render(request, "core/home.html")
 
@@ -35,12 +43,12 @@ def material_upload(request):
         if form.is_valid():
             material = form.save(commit=False)
             material.user = request.user
-            material.file_type = "PDF"
+            material.file_type = material.file_path.name.rsplit(".", 1)[-1].upper()
             material.status = "uploaded"
             material.save()
             return redirect("material_list")
     else:
-        form = StudyMaterialForm()#get request
+        form = StudyMaterialForm()
 
     return render(
         request,
@@ -57,14 +65,16 @@ def material_open(request, material_id):
         raise PermissionDenied
 
     try:
-        pdf = material.file_path.open("rb")
+        file = material.file_path.open("rb")
     except (FileNotFoundError, ValueError):
-        raise Http404("The PDF file could not be found.")
+        raise Http404("The file could not be found.")
+
+    extension = material.file_path.name.rsplit(".", 1)[-1].lower()
 
     return FileResponse(
-        pdf,
-        content_type="application/pdf",
-        as_attachment=False,
+        file,
+        content_type=CONTENT_TYPES.get(extension, "application/octet-stream"),
+        as_attachment=(extension == "docx"),  # browsers can't display Word files, so download them
         filename=material.file_path.name.rsplit("/", 1)[-1],
     )
 
@@ -78,7 +88,7 @@ def material_delete(request, material_id):
         user=request.user,
     )
 
-    # Delete the stored PDF as well as its database record.
+    # Delete the stored PDF and database record.
     material.file_path.delete(save=False)
     material.delete()
 

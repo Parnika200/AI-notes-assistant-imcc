@@ -1,0 +1,27 @@
+<h1>My Study Materials</h1>
+
+<p><a href="{% url 'material_upload' %}">Upload a PDF</a></p>
+
+{% if materials %}
+    <ul>
+        {% for material in materials %}
+            <li>
+                {{ material.title }}
+                — {{ material.uploaded_at|date:"d M Y, H:i" }}
+
+                <a href="{% url 'material_open' material.id %}">Open PDF</a>
+
+                <form
+                    method="post"
+                    action="{% url 'material_delete' material.id %}"
+                    style="display: inline;"
+                >
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You haven’t uploaded any study materials yet.</p>
+{% endif %}

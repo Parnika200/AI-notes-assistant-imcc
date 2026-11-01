@@ -1,0 +1,10 @@
+<h1>Upload Study Material</h1>
+
+<p><a href="{% url 'material_list' %}">My Notes</a></p>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p>Supported files: PDF, DOCX, TXT (max 50 MB)</p>
+    <button type="submit">Upload</button>
+</form>

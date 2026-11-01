@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.db import models
-
+from django.core.validators import FileExtensionValidator
 
 class StudyMaterial(models.Model):
     user = models.ForeignKey(
@@ -11,7 +11,7 @@ class StudyMaterial(models.Model):
     title = models.CharField(max_length=255)
     file_path = models.FileField(
         upload_to="study_materials/",
-        validators=[FileExtensionValidator(["pdf"])],
+        validators=[FileExtensionValidator(["pdf", "docx", "txt"])],
     )
     file_type = models.CharField(max_length=20, default="PDF")
     uploaded_at = models.DateTimeField(auto_now_add=True)
